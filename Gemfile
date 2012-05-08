@@ -18,6 +18,8 @@ group :assets do
   # gem 'therubyracer'
 
   gem 'uglifier', '>= 1.0.3'
+  
+  gem 'twitter-bootstrap-rails'
 end
 
 gem 'jquery-rails'
@@ -36,3 +38,13 @@ gem 'jquery-rails'
 
 # To use debugger
 # gem 'ruby-debug19', :require => 'ruby-debug'
+
+# to support Annotation
+gem 'annotate', '~> 2.4.1.beta'
+
+# to support Friendly URLs
+gem 'friendly_id', '~> 4.0.1'
+
+# to support Tweetstream
+gem 'tweetstream'
+gem 'twitter'
