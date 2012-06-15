@@ -11,25 +11,20 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120520025827) do
+ActiveRecord::Schema.define(:version => 20120615071324) do
 
-  create_table "tags", :force => true do |t|
-    t.integer  "tweet_id"
-    t.string   "description"
+  create_table "new_raw_tweets", :force => true do |t|
+    t.text     "raw"
     t.string   "guid"
-    t.datetime "created_at",  :null => false
-    t.datetime "updated_at",  :null => false
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
-  create_table "tweets", :force => true do |t|
-    t.string   "message"
-    t.string   "username"
+  create_table "parsed_raw_tweets", :force => true do |t|
+    t.text     "raw"
     t.string   "guid"
-    t.string   "company"
-    t.string   "sentimentname"
-    t.string   "sentimentvalue"
-    t.datetime "created_at",     :null => false
-    t.datetime "updated_at",     :null => false
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
 end

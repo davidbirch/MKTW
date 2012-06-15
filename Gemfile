@@ -50,3 +50,4 @@ gem 'friendly_id', '~> 4.0.1'
 # to support Tweetstream
 gem 'tweetstream'
 gem 'twitter'
+gem 'daemons'

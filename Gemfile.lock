@@ -143,6 +143,7 @@ PLATFORMS
 DEPENDENCIES
   annotate (~> 2.4.1.beta)
   coffee-rails (~> 3.2.1)
+  daemons
   friendly_id (~> 4.0.1)
   jqcloud-rails
   jquery-rails

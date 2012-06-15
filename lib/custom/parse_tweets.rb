@@ -12,7 +12,7 @@ require "./#{File.dirname(__FILE__)}/shared_tweet_code.rb"
 
 # initialise the log
 log = Logger.new(File.expand_path(TWEET_LOG_FILE_PATH, __FILE__))
-log.info("Starting get_tweets.rb")
+log.info("Starting parse_tweets.rb")
 
 begin
     
@@ -33,37 +33,37 @@ begin
   )
   
   # on a restart log how many records are existing in the new_raw_tweets table
-  log.debug("get_tweets.rb is connected to the database - Server Info: #{db.server_info}")
+  log.debug("parse_tweets.rb is connected to the database - Server Info: #{db.server_info}")
   
-  # log the row count for 'new_raw_tweets'
-  results = db.query("SELECT id FROM new_raw_tweets")
-  log.debug("Number of rows in new_raw_tweets: #{results.count}")
+  log.info("Starting monitor process")
+  querystring ="
+  SELECT raw, guid
+  FROM new_raw_tweets"
+  log.debug("Run database query: #{querystring}")
+  
+  temp = true
+  while temp
+    # execute the write for the tweet message
+    results = db.query(querystring)
+    log.debug("Number of rows in new_raw_tweets: #{results.count}")
     
-  # access the tweet stream
-  ts_yaml = YAML.load_file(File.expand_path("../../../config/tweetstream.yml", __FILE__))
-  ts_config = ts_yaml[RAILS_ENVIRONMENT]
-  
-  # Debug purposes only
-  #ts_config.each {|key, value|
-  #  puts "#{key} = #{value}"
-  #} 
-  
-  # Log in to the tweetstream
-  log.info("Initialising the Tweetstream")
-  TweetStream.configure do |config|
-    config.consumer_key = ts_config["consumer_key"]
-    config.consumer_secret = ts_config["consumer_secret"]
-    config.oauth_token = ts_config["oauth_token"]
-    config.oauth_token_secret = ts_config["oauth_token_secret"]
-    config.auth_method = ts_config["auth_method"]
+    results.each do |row|
+      
+      # create the normalised records
+      # first check to see if it already exists
+      CreateNormalisedRecords(db,log,row)
+      
+      # move the raw tweet over to the parsed table
+      # first check to see if
+      # (1) it has been created and
+      # (2) it doesnt already exist in the parsed table
+      #ParseRawTweet(db,log,row)
+      
+    end
+    temp = false
   end
+  log.debug("parse_tweets.rb exited the 'while true' loop")
   
-  # call the tweetstream client
-  TweetStream::Client.new.track(companylist) do |status|
-    # create the raw tweet object
-    CreateTweetObjects(db,log,status) 
-  end
-    
 rescue Exception => e  
   # on error just log the error message
   log.error(e.message)  
