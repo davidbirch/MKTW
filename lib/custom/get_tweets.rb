@@ -1,11 +1,11 @@
 # required libraries
 require 'rubygems'
-require 'tweetstream'
 require 'mysql2'
 require 'json'
-require 'net/http'
 require 'logger'
 require 'yaml'
+require 'net/http'
+require 'tweetstream'
 
 # required shared code
 require "./#{File.dirname(__FILE__)}/shared_tweet_code.rb"
@@ -61,7 +61,7 @@ begin
   # call the tweetstream client
   TweetStream::Client.new.track(companylist) do |status|
     # create the raw tweet object
-    CreateTweetObjects(db,log,status) 
+    CreateRawTweet(db,log,status) 
   end
     
 rescue Exception => e  

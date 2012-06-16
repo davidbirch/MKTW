@@ -1,11 +1,11 @@
 # required libraries
 require 'rubygems'
-require 'tweetstream'
 require 'mysql2'
 require 'json'
-require 'net/http'
 require 'logger'
 require 'yaml'
+#require 'net/http'
+#require 'tweetstream'
 
 # required shared code
 require "./#{File.dirname(__FILE__)}/shared_tweet_code.rb"
@@ -35,33 +35,35 @@ begin
   # on a restart log how many records are existing in the new_raw_tweets table
   log.debug("parse_tweets.rb is connected to the database - Server Info: #{db.server_info}")
   
+  # select all tweets in new_raw_tweets for processing
   log.info("Starting monitor process")
   querystring ="
-  SELECT raw, guid
+  SELECT raw, tweet_guid
   FROM new_raw_tweets"
   log.debug("Run database query: #{querystring}")
   
   temp = true
   while temp
-    # execute the write for the tweet message
+    
+    # execute the database query
     results = db.query(querystring)
     log.debug("Number of rows in new_raw_tweets: #{results.count}")
     
     results.each do |row|
-      
+  
       # create the normalised records
       # first check to see if it already exists
+      # then move it to the parsed table - status 'success'
       CreateNormalisedRecords(db,log,row)
       
-      # move the raw tweet over to the parsed table
-      # first check to see if
-      # (1) it has been created and
-      # (2) it doesnt already exist in the parsed table
-      #ParseRawTweet(db,log,row)
-      
     end
+    
+    #only run once for debugging
     temp = false
+    
   end
+  
+  # this message should never get called
   log.debug("parse_tweets.rb exited the 'while true' loop")
   
 rescue Exception => e  
@@ -70,7 +72,7 @@ rescue Exception => e
   log.error(e.backtrace.inspect)
 end
 
-# Close the database
+# close the database
 if db
   db.close 
   log.info("Database closed")

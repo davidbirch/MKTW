@@ -2,8 +2,8 @@
 
 one:
   raw: MyText
-  guid: MyString
+  tweet_guid: MyString
 
 two:
   raw: MyText
-  guid: MyString
+  tweet_guid: MyString

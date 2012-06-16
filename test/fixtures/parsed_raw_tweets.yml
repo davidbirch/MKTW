@@ -2,8 +2,10 @@
 
 one:
   raw: MyText
-  guid: MyString
+  tweet_guid: MyString
+  parse_status: MyString
 
 two:
   raw: MyText
-  guid: MyString
+  tweet_guid: MyString
+  parse_status: MyString
