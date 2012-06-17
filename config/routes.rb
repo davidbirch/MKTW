@@ -4,6 +4,9 @@ MKTW::Application.routes.draw do
   # default route
   root :to => 'pages#home'
   
+  # -------------------------------------------------------
+  # static pages
+  match '/dashboard',     :to => 'pages#dashboard'
   
   
   

@@ -28,7 +28,7 @@ def CreateRawTweet(db,log,status)
     VALUES('#{raw_tweet}', '#{tweet_guid}', '#{tweet_created_at}', '#{tweet_updated_at}')"
       
     # execute the database query
-    log.debug("Run database query: #{querystring}")
+    #log.debug("Run database query: #{querystring}")
     db.query(querystring)
     
     # monitor the status of the script and write to the log every 10 minutes
@@ -148,7 +148,12 @@ def CreateNormalisedRecords(db,log,row)
     # no special return ... just true
     return true
     
-  rescue Exception => e  
+  rescue Exception => e
+    
+    # move the raw tweet over to the parsed table
+    parse_status = "Success"
+    ParseRawTweet(db,log,row,parse_status)
+    
     # on error just log the error message
     log.error(e.message)  
     log.error(e.backtrace.inspect)
