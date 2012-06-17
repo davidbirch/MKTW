@@ -33,11 +33,11 @@ begin
   )
   
   # on a restart log how many records are existing in the new_raw_tweets table
-  log.debug("get_tweets.rb is connected to the database - Server Info: #{db.server_info}")
+  log.info("get_tweets.rb is connected to the database - Server Info: #{db.server_info}")
   
   # log the row count for 'new_raw_tweets'
   results = db.query("SELECT id FROM new_raw_tweets")
-  log.debug("Number of rows in new_raw_tweets: #{results.count}")
+  log.info("Number of rows in new_raw_tweets: #{results.count}")
     
   # access the tweet stream
   ts_yaml = YAML.load_file(File.expand_path("../../../config/tweetstream.yml", __FILE__))

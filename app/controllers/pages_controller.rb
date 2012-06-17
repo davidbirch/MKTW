@@ -20,7 +20,17 @@ class PagesController < ApplicationController
     @title = "Positive Sentiment | Dashboard"
     @keywords = ""
   
-  
+    querystring = "SELECT * FROM new_raw_tweets"
+    @new_tweets = Tweet.find_by_sql(querystring)
+    
+    querystring = "SELECT * FROM parsed_raw_tweets"
+    @parsed_tweets = Tweet.find_by_sql(querystring)
+    
+    querystring = "SELECT * FROM tweets"
+    @tweets = Tweet.find_by_sql(querystring)
+    
+    querystring = "SELECT * FROM users"
+    @users = Tweet.find_by_sql(querystring)
     
   end
   

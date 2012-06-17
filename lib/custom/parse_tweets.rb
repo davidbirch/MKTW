@@ -33,7 +33,7 @@ begin
   )
   
   # on a restart log how many records are existing in the new_raw_tweets table
-  log.debug("parse_tweets.rb is connected to the database - Server Info: #{db.server_info}")
+  log.info("parse_tweets.rb is connected to the database - Server Info: #{db.server_info}")
   
   # select all tweets in new_raw_tweets for processing
   log.info("Starting monitor process")
@@ -47,7 +47,7 @@ begin
     
     # execute the database query
     results = db.query(querystring)
-    log.debug("Number of rows in new_raw_tweets: #{results.count}")
+    #log.debug("Number of rows in new_raw_tweets: #{results.count}")
     
     results.each do |row|
   

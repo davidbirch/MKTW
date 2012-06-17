@@ -73,7 +73,7 @@ def CreateNormalisedRecords(db,log,row)
     WHERE tweet_guid = '#{tweet_guid}'"
     
     # execute the database query
-    log.debug("Run database query: #{querystring}")
+    #log.debug("Run database query: #{querystring}")
     tweet_check = db.query(querystring)
     
     if tweet_check.count > 0
@@ -134,7 +134,7 @@ def CreateNormalisedRecords(db,log,row)
     VALUES('#{user_guid}', '#{screen_name}', '#{friends_count}',  '#{user_created_at}', '#{user_updated_at}')"
   
         # execute the database query to create the user
-        log.debug("Run database query: #{querystring}")
+        #log.debug("Run database query: #{querystring}")
         db.query(querystring)
         
       end
@@ -204,7 +204,7 @@ def ParseRawTweet(db,log,row,parse_status)
     VALUES('#{raw_tweet}', '#{tweet_guid}', '#{parse_status}', '#{tweet_created_at}', '#{tweet_updated_at}')"
     
       # execute the query
-      log.debug("Run database query: #{querystring}")
+      #log.debug("Run database query: #{querystring}")
       db.query(querystring)
   
       querystring = "
