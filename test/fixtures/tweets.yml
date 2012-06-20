@@ -3,13 +3,21 @@
 one:
   tweet_text: MyString
   tweet_created_at: MyString
-  tweet_guid: MyString
+  tweet_guid: 1
   tweet_source: MyString
-  user_guid: MyString
+  user_id: 1
+  user_guid: 1
+  company_keyword_id: 1
+  company_keyword: MyString
+  sentiment: MyString
 
 two:
   tweet_text: MyString
   tweet_created_at: MyString
-  tweet_guid: MyString
+  tweet_guid: 1
   tweet_source: MyString
-  user_guid: MyString
+  user_id: 1
+  user_guid: 1
+  company_keyword_id: 1
+  company_keyword: MyString
+  sentiment: MyString

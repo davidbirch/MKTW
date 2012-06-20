@@ -1,11 +1,11 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
 
 one:
-  raw: MyText
+  tweet_id: 1
   tweet_guid: 1
-  parse_status: MyString
+  tag_name: MyString
 
 two:
-  raw: MyText
+  tweet_id: 1
   tweet_guid: 1
-  parse_status: MyString
+  tag_name: MyString

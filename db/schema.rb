@@ -11,39 +11,78 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120616045514) do
+ActiveRecord::Schema.define(:version => 20120620092639) do
+
+  create_table "companies", :force => true do |t|
+    t.string   "company_name"
+    t.string   "company_description"
+    t.string   "asx_code"
+    t.datetime "created_at",          :null => false
+    t.datetime "updated_at",          :null => false
+  end
+
+  create_table "company_keywords", :force => true do |t|
+    t.string   "company_keyword"
+    t.integer  "company_id"
+    t.string   "company_name"
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
+  end
+
+  create_table "company_prices", :force => true do |t|
+    t.datetime "price_time"
+    t.decimal  "price_value",  :precision => 10, :scale => 0
+    t.integer  "company_id"
+    t.string   "company_name"
+    t.datetime "created_at",                                  :null => false
+    t.datetime "updated_at",                                  :null => false
+  end
 
   create_table "new_raw_tweets", :force => true do |t|
     t.text     "raw"
-    t.string   "tweet_guid"
+    t.integer  "tweet_guid"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
 
   create_table "parsed_raw_tweets", :force => true do |t|
     t.text     "raw"
-    t.string   "tweet_guid"
+    t.integer  "tweet_guid"
     t.string   "parse_status"
     t.datetime "created_at",   :null => false
     t.datetime "updated_at",   :null => false
   end
 
+  create_table "tags", :force => true do |t|
+    t.integer  "tweet_id"
+    t.integer  "tweet_guid"
+    t.string   "tag_name"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
   create_table "tweets", :force => true do |t|
     t.string   "tweet_text"
     t.string   "tweet_created_at"
-    t.string   "tweet_guid"
+    t.integer  "tweet_guid"
     t.string   "tweet_source"
-    t.string   "user_guid"
-    t.datetime "created_at",       :null => false
-    t.datetime "updated_at",       :null => false
+    t.integer  "user_id"
+    t.integer  "user_guid"
+    t.integer  "company_keyword_id"
+    t.string   "company_keyword"
+    t.string   "sentiment"
+    t.datetime "created_at",         :null => false
+    t.datetime "updated_at",         :null => false
   end
 
   create_table "users", :force => true do |t|
-    t.string   "user_guid"
+    t.integer  "user_guid"
     t.string   "screen_name"
     t.integer  "friends_count"
-    t.datetime "created_at",    :null => false
-    t.datetime "updated_at",    :null => false
+    t.string   "name"
+    t.string   "profile_image_url"
+    t.datetime "created_at",        :null => false
+    t.datetime "updated_at",        :null => false
   end
 
 end
