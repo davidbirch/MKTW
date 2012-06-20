@@ -40,49 +40,49 @@ ActiveRecord::Schema.define(:version => 20120620092639) do
 
   create_table "new_raw_tweets", :force => true do |t|
     t.text     "raw"
-    t.integer  "tweet_guid"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.integer  "tweet_guid", :limit => 8
+    t.datetime "created_at",              :null => false
+    t.datetime "updated_at",              :null => false
   end
 
   create_table "parsed_raw_tweets", :force => true do |t|
     t.text     "raw"
-    t.integer  "tweet_guid"
+    t.integer  "tweet_guid",   :limit => 8
     t.string   "parse_status"
-    t.datetime "created_at",   :null => false
-    t.datetime "updated_at",   :null => false
+    t.datetime "created_at",                :null => false
+    t.datetime "updated_at",                :null => false
   end
 
   create_table "tags", :force => true do |t|
     t.integer  "tweet_id"
-    t.integer  "tweet_guid"
+    t.integer  "tweet_guid", :limit => 8
     t.string   "tag_name"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",              :null => false
+    t.datetime "updated_at",              :null => false
   end
 
   create_table "tweets", :force => true do |t|
     t.string   "tweet_text"
     t.string   "tweet_created_at"
-    t.integer  "tweet_guid"
+    t.integer  "tweet_guid",         :limit => 8
     t.string   "tweet_source"
     t.integer  "user_id"
-    t.integer  "user_guid"
+    t.integer  "user_guid",          :limit => 8
     t.integer  "company_keyword_id"
     t.string   "company_keyword"
     t.string   "sentiment"
-    t.datetime "created_at",         :null => false
-    t.datetime "updated_at",         :null => false
+    t.datetime "created_at",                      :null => false
+    t.datetime "updated_at",                      :null => false
   end
 
   create_table "users", :force => true do |t|
-    t.integer  "user_guid"
+    t.integer  "user_guid",         :limit => 8
     t.string   "screen_name"
     t.integer  "friends_count"
     t.string   "name"
     t.string   "profile_image_url"
-    t.datetime "created_at",        :null => false
-    t.datetime "updated_at",        :null => false
+    t.datetime "created_at",                     :null => false
+    t.datetime "updated_at",                     :null => false
   end
 
 end
