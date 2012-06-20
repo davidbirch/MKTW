@@ -8,7 +8,19 @@ MKTW::Application.routes.draw do
   # static pages
   match '/dashboard',     :to => 'pages#dashboard'
   
+  # -------------------------------------------------------
+  # specific resource routes
+  resources :tweets, :only => [:index]
+  #resources :users
+  #resources :tags
+  #resources :groups
+  #resources :companies
+  #resources :company_prices
+  #resources :company_keywords
+  #resources :new_raw_tweets
+  #resources :parsed_raw_tweets
   
+  # ---------------------------------------------------
   
 
   # The priority is based upon order of creation:
