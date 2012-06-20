@@ -73,7 +73,7 @@ def CreateNormalisedRecords(db,log,row)
     WHERE tweet_guid = '#{tweet_guid}'"
     
     # execute the database query
-    #log.debug("Run database query: #{querystring}")
+    log.debug("Run database query: #{querystring}")
     tweet_check = db.query(querystring)
     
     if tweet_check.count > 0
@@ -97,28 +97,31 @@ def CreateNormalisedRecords(db,log,row)
       tweet_created_at = Time.now # note: this is the Rails created_at, not a Tweet attribute
       tweet_updated_at = tweet_created_at # note: this is the Rails updated_at, not a Tweet attribute
       
-      querystring = "
-    INSERT INTO tweets (tweet_text, tweet_created_at, tweet_guid, tweet_source, user_guid, created_at, updated_at)
-    VALUES('#{tweet_text}', '#{tweet_created_at}', '#{tweet_guid}', '#{tweet_source}', '#{user_guid}', '#{tweet_created_at}', '#{tweet_updated_at}')"
+      # create the user first so that the proper association can be created
       
-      # execute the database query to create the tweet
-      #log.debug("Run database query: #{querystring}")
-      db.query(querystring)
-    
       # check if the user exists before inserting
       querystring = "
-    SELECT user_guid
+    SELECT id
     FROM users
     WHERE user_guid = '#{user_guid}'"
     
       # execute the database query
-      #log.debug("Run database query: #{querystring}")
+      log.debug("Run database query: #{querystring}")
       user_check = db.query(querystring)
       
-      if user_check.count > 0
+      if user_check.count > 1
+        # multiple matching user records - error
+        log.debug("Error - multiple(#{user_check.count}) user records for user_guid #{user_guid}")
+        # still create with id of zero so that the data is captured
+        user_id = 0
+      
+      elsif user_check.count == 1
         # the record must already exist
-        # do nothing
-        
+        # just get the user id
+        user_check.each do |user|
+          user_id = user["id"]
+        end
+   
       else
         # the record does not exist so create it
         # get the field values to insert
@@ -134,10 +137,22 @@ def CreateNormalisedRecords(db,log,row)
     VALUES('#{user_guid}', '#{screen_name}', '#{friends_count}',  '#{user_created_at}', '#{user_updated_at}')"
   
         # execute the database query to create the user
-        #log.debug("Run database query: #{querystring}")
+        log.debug("Run database query: #{querystring}")
         db.query(querystring)
         
+        #assign the user_id
+        user_id = db.last_id
       end
+      
+      # now create the tweet obkect
+      
+      querystring = "
+    INSERT INTO tweets (tweet_text, tweet_created_at, tweet_guid, tweet_source, user_guid, user_id, created_at, updated_at)
+    VALUES('#{tweet_text}', '#{tweet_created_at}', '#{tweet_guid}', '#{tweet_source}', '#{user_guid}', '#{user_id}', '#{tweet_created_at}', '#{tweet_updated_at}')"
+      
+      # execute the database query to create the tweet
+      log.debug("Run database query: #{querystring}")
+      db.query(querystring)
       
       # move the raw tweet over to the parsed table
       parse_status = "Success"
@@ -150,13 +165,13 @@ def CreateNormalisedRecords(db,log,row)
     
   rescue Exception => e
     
-    # move the raw tweet over to the parsed table
-    parse_status = "Success"
-    ParseRawTweet(db,log,row,parse_status)
-    
     # on error just log the error message
     log.error(e.message)  
     log.error(e.backtrace.inspect)
+    
+    # move the raw tweet over to the parsed table
+    parse_status = "Failure"
+    ParseRawTweet(db,log,row,parse_status)
     
     return false
   end
@@ -172,7 +187,7 @@ def ParseRawTweet(db,log,row,parse_status)
     SELECT tweet_guid
     FROM parsed_raw_tweets
     WHERE tweet_guid = '#{row["tweet_guid"]}'"
-    #log.debug("Run database query: #{querystring}")
+    log.debug("Run database query: #{querystring}")
     
     # execute the write for the tweet message
     results = db.query(querystring)
@@ -180,16 +195,14 @@ def ParseRawTweet(db,log,row,parse_status)
     if results.count > 0
       # the record must already exist
       # raise an error message and delete the record in new_raw_tweets
-      #log.debug("Duplicate entry found (count = #{results.count}) with:
-      #guid = #{row["tweet_guid"]}
-      #raw  = #{row["raw"]}")
+      log.debug("Duplicate entry found (count = #{results.count}) with guid = #{row["tweet_guid"]}")
       
       querystring = "
     DELETE FROM new_raw_tweets
     WHERE tweet_guid = '#{row["tweet_guid"]}'"
       
       # execute the  query
-      #log.debug("Run database query: #{querystring}")
+      log.debug("Run database query: #{querystring}")
       db.query(querystring)
         
     else
@@ -204,7 +217,7 @@ def ParseRawTweet(db,log,row,parse_status)
     VALUES('#{raw_tweet}', '#{tweet_guid}', '#{parse_status}', '#{tweet_created_at}', '#{tweet_updated_at}')"
     
       # execute the query
-      #log.debug("Run database query: #{querystring}")
+      log.debug("Run database query: #{querystring}")
       db.query(querystring)
   
       querystring = "
@@ -212,7 +225,7 @@ def ParseRawTweet(db,log,row,parse_status)
     WHERE tweet_guid = '#{row["tweet_guid"]}'"
       
       # execute the  query
-      #log.debug("Run database query: #{querystring}")
+      log.debug("Run database query: #{querystring}")
       db.query(querystring)
   
     end
