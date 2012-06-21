@@ -11,7 +11,7 @@ MKTW::Application.routes.draw do
   # -------------------------------------------------------
   # specific resource routes
   resources :tweets, :only => [:index]
-  #resources :users
+  resources :users, :only => [:index]
   #resources :tags
   #resources :groups
   #resources :companies
