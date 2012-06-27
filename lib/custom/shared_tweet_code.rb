@@ -60,7 +60,7 @@ def CreateNormalisedRecords(db,log,row)
     # extract the raw tweet and convert it
     raw_tweet = row["raw"]
     #log.debug("Raw  = #{raw_tweet}")
-    tweet_hash = JSON.parse(raw_tweet) # note getting an error on one record that is not valid JSON ...
+    tweet_hash = JSON.parse(raw_tweet) # note +was+ getting an error on one record that is not valid JSON ...
     #log.debug("Hash = #{tweet_hash}")
     
     # get the tweet id
@@ -85,7 +85,14 @@ def CreateNormalisedRecords(db,log,row)
       # move the raw tweet over to the parsed table
       parse_status = "Success"
       ParseRawTweet(db,log,row,parse_status)
+    
+    elsif false
+      # put other filters here
       
+      # is marketing?
+      # is rubbish?
+      # is unrelated?
+          
     else
       # the record does not exist so create it
       # get the field values to insert
@@ -93,6 +100,10 @@ def CreateNormalisedRecords(db,log,row)
       tweet_created_at = tweet_hash["created_at"]
       tweet_source = db.escape(tweet_hash["source"])
       user_guid = tweet_hash["user"]["id"]
+      
+      # get the sentiment value
+      sentiment_result = GetSentimentValue(tweet_text)
+      sentiment = sentiment_result["name"]
         
       tweet_created_at = Time.now # note: this is the Rails created_at, not a Tweet attribute
       tweet_updated_at = tweet_created_at # note: this is the Rails updated_at, not a Tweet attribute
@@ -128,7 +139,7 @@ def CreateNormalisedRecords(db,log,row)
         user_hash = tweet_hash["user"]
         screen_name = user_hash["screen_name"]
         friends_count = user_hash["friends_count"]
-        
+             
         user_created_at = Time.now # note: this is the Rails created_at, not a User attribute
         user_updated_at = user_created_at # note: this is the Rails updated_at, not a User attribute
         
@@ -143,12 +154,11 @@ def CreateNormalisedRecords(db,log,row)
         #assign the user_id
         user_id = db.last_id
       end
-      
-      # now create the tweet obkect
-      
+    
+      # now create the tweet object
       querystring = "
-    INSERT INTO tweets (tweet_text, tweet_created_at, tweet_guid, tweet_source, user_guid, user_id, created_at, updated_at)
-    VALUES('#{tweet_text}', '#{tweet_created_at}', '#{tweet_guid}', '#{tweet_source}', '#{user_guid}', '#{user_id}', '#{tweet_created_at}', '#{tweet_updated_at}')"
+    INSERT INTO tweets (tweet_text, tweet_created_at, tweet_guid, tweet_source, user_guid, user_id, sentiment, created_at, updated_at)
+    VALUES('#{tweet_text}', '#{tweet_created_at}', '#{tweet_guid}', '#{tweet_source}', '#{user_guid}', '#{user_id}', '#{sentiment}', '#{tweet_created_at}', '#{tweet_updated_at}')"
       
       # execute the database query to create the tweet
       log.debug("Run database query: #{querystring}")
@@ -240,6 +250,20 @@ def ParseRawTweet(db,log,row,parse_status)
     
     return false
   end
+end
+################################################################################
+
+def GetSentimentValue(message)
+  
+  # Get the sentiments on each tweet using the awesome tweetsentiments API
+  # http://data.tweetsentiments.com:8080/api/search.json?topic=<topic to analyze>
+  sentiment_url = "http://data.tweetsentiments.com:8080/api/analyze.json?q="+message
+  sentiment_url_encoded = URI::encode(sentiment_url)
+  sentiment_resp = Net::HTTP.get_response(URI.parse(sentiment_url_encoded))
+  sentiment_data = sentiment_resp.body
+  sentiment_result = JSON.parse(sentiment_data)
+    
+  return sentiment_result
 end
 ################################################################################
 
