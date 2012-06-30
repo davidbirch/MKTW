@@ -1,10 +1,7 @@
-################################################################################
-#
-# This code block contains all the shared code for the collect_tweets application
-#
-# Version 0.1
-# Date: 14/06/2012
-################################################################################
+# ************************************************************************
+# ** contains all shared code for the 'collect_tweets' group of scripts **
+# ** created DB 28/06                                                   **
+# ************************************************************************
 
 # some constants and global variables are stored here
 RAILS_ENVIRONMENT = "development" # used to open the database
@@ -102,8 +99,8 @@ def CreateNormalisedRecords(db,log,row)
       user_guid = tweet_hash["user"]["id"]
       
       # get the sentiment value
-      sentiment_result = GetSentimentValue(tweet_text)
-      sentiment = sentiment_result["name"]
+      sentiment_result = GetSentimentValue(log,tweet_text)
+      sentiment = sentiment_result["sentiment"]["name"]
         
       tweet_created_at = Time.now # note: this is the Rails created_at, not a Tweet attribute
       tweet_updated_at = tweet_created_at # note: this is the Rails updated_at, not a Tweet attribute
@@ -253,15 +250,21 @@ def ParseRawTweet(db,log,row,parse_status)
 end
 ################################################################################
 
-def GetSentimentValue(message)
+def GetSentimentValue(log,message)
   
   # Get the sentiments on each tweet using the awesome tweetsentiments API
   # http://data.tweetsentiments.com:8080/api/search.json?topic=<topic to analyze>
   sentiment_url = "http://data.tweetsentiments.com:8080/api/analyze.json?q="+message
+  log.debug("Execute sentiment query:
+  #{sentiment_url}")
+  
   sentiment_url_encoded = URI::encode(sentiment_url)
   sentiment_resp = Net::HTTP.get_response(URI.parse(sentiment_url_encoded))
   sentiment_data = sentiment_resp.body
   sentiment_result = JSON.parse(sentiment_data)
+   
+    # every time this is called wait 5 sec to avoind the rate limit
+    sleep 5 
     
   return sentiment_result
 end

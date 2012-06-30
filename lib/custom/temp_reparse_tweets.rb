@@ -1,6 +1,5 @@
 # ************************************************************************
-# ** script to parse records as they are dropped into new_raw_tweets    **
-# ** created DB 28/06                                                   **
+# ** temporary script to move unparsed records from parsed back to new  **
 # ************************************************************************
 
 # required libraries
@@ -40,11 +39,11 @@ begin
   # on a restart log how many records are existing in the new_raw_tweets table
   log.info("parse_tweets.rb is connected to the database - Server Info: #{db.server_info}")
   
-  # select all tweets in new_raw_tweets for processing
+  # select all tweets in parsed_raw_tweets for processing
   log.info("Starting monitor process")
   querystring ="
   SELECT raw, tweet_guid
-  FROM new_raw_tweets"
+  FROM parsed_raw_tweets"
   log.debug("Run database query: #{querystring}")
   
   # use temp here so that it can be called manually
@@ -58,10 +57,27 @@ begin
     
     results.each do |row|
   
-      # create the normalised records
-      # first check to see if it already exists
-      # then move it to the parsed table - status 'success'
-      CreateNormalisedRecords(db,log,row)
+      # the record does not exist so create it
+      raw_tweet = db.escape(row["raw"])
+      tweet_guid = row["tweet_guid"]
+      tweet_created_at = Time.now # note: this is the Rails created_at, not a Tweet attribute
+      tweet_updated_at = tweet_created_at # note: this is the Rails updated_at, not a Tweet attribute
+          
+      querystring = "
+    INSERT INTO new_raw_tweets (raw, tweet_guid, created_at, updated_at)
+    VALUES('#{raw_tweet}', '#{tweet_guid}', '#{tweet_created_at}', '#{tweet_updated_at}')"
+      
+      # execute the query
+      # log.debug("Run database query: #{querystring}")
+      db.query(querystring)
+  
+      querystring = "
+    DELETE FROM parsed_raw_tweets
+    WHERE tweet_guid = '#{tweet_guid}'"
+      
+      # execute the query
+      log.debug("Run database query: #{querystring}")
+      db.query(querystring)
       
     end
     

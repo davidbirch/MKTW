@@ -1,5 +1,33 @@
 <h2>Tweets</h2>
 <p>List of tweets</p>
-<% @tweets.each do |tweet| %>
-  <p><%= tweet.tweet_text %></p>
-<% end %>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Text</th>
+      <th>GUID</th>
+      <th>Source</th>
+      <th>User GUID</th>
+      <th>Company Keyword</th>
+      <th>Sentiment</th>
+      <th>Created At</th>
+      <th>Updated At</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @tweets.each do |tweet| %>
+    <tr>
+      <td><%= tweet.id %></td>
+      <td><%= tweet.tweet_text %></td>
+      <td><%= tweet.tweet_guid %></td>
+      <td><%= tweet.tweet_source %></td>
+      <td><%= tweet.user_guid %></td>
+      <td><%= tweet.company_keyword %></td>
+      <td><%= tweet.sentiment %></td>
+      <td><%= tweet.created_at %></td>
+      <td><%= tweet.updated_at %></td>
+    </tr>
+  <p></p>
+    <% end %>
+  </tbody>
+</table>

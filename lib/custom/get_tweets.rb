@@ -1,3 +1,8 @@
+# ************************************************************************
+# ** script to monitor TweetStream and drop tweets in new_raw_tweets    **
+# ** created DB 28/06                                                   **
+# ************************************************************************
+
 # required libraries
 require 'rubygems'
 require 'mysql2'
