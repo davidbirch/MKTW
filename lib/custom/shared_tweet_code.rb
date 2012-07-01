@@ -94,7 +94,7 @@ def CreateNormalisedRecords(db,log,row)
       # the record does not exist so create it
       # get the field values to insert
       tweet_text = db.escape(tweet_hash["text"])
-      tweet_original_created_at = tweet_hash["created_at"]
+      tweet_original_created_at = Time.parse(tweet_hash["created_at"])
       tweet_source = db.escape(tweet_hash["source"])
       user_guid = tweet_hash["user"]["id"]
       

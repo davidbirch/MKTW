@@ -12,6 +12,9 @@ body{
     margin-right: -20px;   
 }
 
+.total {
+    font-weight: bold;
+}
 
 a.menu{
     text-decoration: underline;

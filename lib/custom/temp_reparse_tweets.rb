@@ -8,6 +8,7 @@ require 'rubygems'
 require 'mysql2'
 require 'json'
 require 'logger'
+require 'time'
 require 'yaml'
 require 'net/http'
 #require 'tweetstream'
@@ -43,8 +44,8 @@ begin
   # select all tweets in parsed_raw_tweets for processing
   log.info("Starting monitor process")
   querystring ="
-  SELECT raw, tweet_guid
-  FROM parsed_raw_tweets"
+    SELECT raw, tweet_guid
+    FROM parsed_raw_tweets"
   log.debug("Run database query: #{querystring}")
   
   # use temp here so that it can be called manually
