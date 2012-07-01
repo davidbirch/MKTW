@@ -1,5 +1,5 @@
 # ************************************************************************
-# ** temporary script to move unparsed records from parsed back to new  **
+# ** temporary script to create the companies records                   **
 # ** created DB 28/06                                                   **
 # ************************************************************************
 
@@ -17,7 +17,7 @@ require "./#{File.dirname(__FILE__)}/shared_tweet_code.rb"
 
 # initialise the log
 log = Logger.new(File.expand_path(TWEET_LOG_FILE_PATH, __FILE__))
-log.info("Starting temp_reparse_tweets.rb")
+log.info("Starting temp_seed_companies.rb")
 
 begin
     
@@ -38,7 +38,7 @@ begin
   )
   
   # on a restart log how many records are existing in the new_raw_tweets table
-  log.info("parse_tweets.rb is connected to the database - Server Info: #{db.server_info}")
+  log.info("temp_seed_companies.rb is connected to the database - Server Info: #{db.server_info}")
   
   # select all tweets in parsed_raw_tweets for processing
   log.info("Starting monitor process")

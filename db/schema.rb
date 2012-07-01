@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120620092639) do
+ActiveRecord::Schema.define(:version => 20120701034747) do
 
   create_table "companies", :force => true do |t|
     t.string   "company_name"
@@ -63,7 +63,7 @@ ActiveRecord::Schema.define(:version => 20120620092639) do
 
   create_table "tweets", :force => true do |t|
     t.string   "tweet_text"
-    t.string   "tweet_created_at"
+    t.datetime "tweet_created_at"
     t.integer  "tweet_guid",         :limit => 8
     t.string   "tweet_source"
     t.integer  "user_id"

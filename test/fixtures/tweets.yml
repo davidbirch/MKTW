@@ -2,7 +2,7 @@
 
 one:
   tweet_text: MyString
-  tweet_created_at: MyString
+  tweet_created_at: 2012-07-01 13:44:41
   tweet_guid: 1
   tweet_source: MyString
   user_id: 1
@@ -13,7 +13,7 @@ one:
 
 two:
   tweet_text: MyString
-  tweet_created_at: MyString
+  tweet_created_at: 2012-07-01 13:44:41
   tweet_guid: 1
   tweet_source: MyString
   user_id: 1

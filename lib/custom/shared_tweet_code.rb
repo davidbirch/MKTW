@@ -94,7 +94,7 @@ def CreateNormalisedRecords(db,log,row)
       # the record does not exist so create it
       # get the field values to insert
       tweet_text = db.escape(tweet_hash["text"])
-      tweet_created_at = tweet_hash["created_at"]
+      tweet_original_created_at = tweet_hash["created_at"]
       tweet_source = db.escape(tweet_hash["source"])
       user_guid = tweet_hash["user"]["id"]
       
@@ -155,7 +155,7 @@ def CreateNormalisedRecords(db,log,row)
       # now create the tweet object
       querystring = "
     INSERT INTO tweets (tweet_text, tweet_created_at, tweet_guid, tweet_source, user_guid, user_id, sentiment, created_at, updated_at)
-    VALUES('#{tweet_text}', '#{tweet_created_at}', '#{tweet_guid}', '#{tweet_source}', '#{user_guid}', '#{user_id}', '#{sentiment}', '#{tweet_created_at}', '#{tweet_updated_at}')"
+    VALUES('#{tweet_text}', '#{tweet_original_created_at}', '#{tweet_guid}', '#{tweet_source}', '#{user_guid}', '#{user_id}', '#{sentiment}', '#{tweet_created_at}', '#{tweet_updated_at}')"
       
       # execute the database query to create the tweet
       log.debug("Run database query: #{querystring}")
@@ -264,7 +264,7 @@ def GetSentimentValue(log,message)
   sentiment_result = JSON.parse(sentiment_data)
    
     # every time this is called wait 5 sec to avoind the rate limit
-    sleep 5 
+    sleep 2 
     
   return sentiment_result
 end
