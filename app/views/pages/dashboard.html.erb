@@ -1,35 +1,6 @@
-<h1 class="menu">Dashboard</h1>
-<p>This is a dashboard</p>
-<table class="table table-striped">
-  <thead>
-    <tr>
-      <th></th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>number of records in new_raw_tweets is</td>
-      <td><%= @new_tweets.count %></td>
-    </tr>
-    <tr>
-      <td>number of records in parsed_raw_tweets is</td>
-      <td><%= @parsed_tweets.count %></td>
-    </tr>
-    <tr>
-      <td>number of records in users is</td>
-      <td><%= @users.count %></td>
-    </tr>
-    <tr>
-      <td>number of records in tweets is</td>
-      <td><%= @tweets.count %></td>
-    </tr>
-    <% @sentiment_count.each do |count_row| %>
-    <tr>
-      <td><%= count_row.sentiment %></td>
-      <td><%= count_row.sentiment_count %></td> 
-    </tr>
-    <% end %> 
-    
-   </tbody>
-</table>
+<h2 class="menu">Dashboard</h2>
+<p><%= page_loaded %></p>
+<%= render "new_raw_tweets_summary" %>
+<%= render "parsed_raw_tweets_summary" %>
+<%= render "tweets_summary" %>
+<%= render "users_summary" %>

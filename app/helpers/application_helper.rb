@@ -8,5 +8,10 @@ module ApplicationHelper
   def keywords
       "#{@keywords}"
   end
+    
+  def page_loaded
+      "#{@page_loaded}"
+  end
+  
   
 end
