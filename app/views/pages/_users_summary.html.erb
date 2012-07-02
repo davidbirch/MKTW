@@ -1,2 +1,4 @@
-<h3 class="menu">Users</h3>
-<p>Record Count: <%= @users.count %></p>
+<h3>Users</h3>
+<% @user_count.each do |count_row| %>
+  <p> Record Count: <%= count_row["user_count"] %></p>
+<% end %>

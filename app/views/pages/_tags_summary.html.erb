@@ -1,28 +1,30 @@
-<h3>Tweets</h3>
-<% @tweet_count.each do |count_row| %>
-  <p> Record Count: <%= count_row["tweet_count"] %></p>
+<h3>Tags</h3>
+<% @tag_count.each do |count_row| %>
+  <p> Record Count: <%= count_row["tag_count"] %></p>
 <% end %>
-<h4>Breakdown by sentiment</h4>
+<h4>Top tag count</h4>
 <div class="row">
   <div class="span4">
     <table class="table table-striped table-bordered table-condensed">
       <thead>
         <tr>
+          <th>Tag</th>
           <th>Sentiment</th>
           <th>Count</th>
         </tr>
       </thead>
       <tbody>
-      <% @tweet_sentiment_count.each do |count_row| %>
+      <% @top_tags_count.each do |count_row| %>
         <tr>
+          <td><%= count_row.tag_name %></td>
           <td><%= count_row.sentiment %></td>
-          <td><%= count_row.sentiment_count %></td>
+          <td><%= count_row.tag_count %></td>
         </tr>
       <% end %>
         <tr class="total">
-          <td>Total</td>
-          <% @tweet_count.each do |count_row| %>
-          <td><%= count_row["tweet_count"] %></td>
+          <td colspan="2" >Total</td>
+          <% @tag_count.each do |count_row| %>
+          <td><%= count_row["tag_count"] %></td>
           <% end %>
         </tr>
       </tbody>
@@ -31,30 +33,28 @@
   <div class="span8">
   </div>
 </div>
-<h4>Breakdown by day and hour</h4>
+<h4>Top tag count today</h4>
 <div class="row">
   <div class="span4">
     <table class="table table-striped table-bordered table-condensed">
       <thead>
         <tr>
-          <th>Date</th>
-          <th>Hour</th>
+          <th>Tag</th>
+          <th>Sentiment</th>
           <th>Count</th>
         </tr>
       </thead>
       <tbody>
-      <% @tweet_daily_count.each do |count_row| %>
+      <% @top_tags_count_today.each do |count_row| %>
         <tr>
-          <td><%= count_row.tweet_by_day %></td>
-          <td><%= count_row.tweet_by_hour %></td>
-          <td><%= count_row.tweet_daily_count %></td>
+          <td><%= count_row.tag_name %></td>
+          <td><%= count_row.sentiment %></td>
+          <td><%= count_row.tag_count %></td>
         </tr>
       <% end %>
         <tr class="total">
           <td colspan="2" >Total</td>
-          <% @tweet_count.each do |count_row| %>
-          <td><%= count_row["tweet_count"] %></td>
-          <% end %>
+          <td>...</td>
         </tr>
       </tbody>
     </table>
@@ -62,5 +62,4 @@
   <div class="span8">
   </div>
 </div>
-
 

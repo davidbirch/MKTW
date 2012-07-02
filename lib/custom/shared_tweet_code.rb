@@ -161,6 +161,39 @@ def CreateNormalisedRecords(db,log,row)
       log.debug("Run database query: #{querystring}")
       db.query(querystring)
       
+      # create the keywords
+      tweet_id = db.last_id
+      
+      tweet_text.split(" ").each do |kword|
+      
+        # Strip the leading and trailing non-alpha characters
+        tag_description = db.escape(kword.gsub(/\A[\d_\W]+|[\d_\W]+\Z/, ''))
+          
+        # Check that this is a valid keyword to create
+        # Rule 1 - ignore if the length of the string is less than 4 characters
+        if tag_description.length < 4
+          # Do nothing
+          # log.debug("Skip keyword: #{kword} (too short)")
+        # Rule 2 - ignore URIs
+        elsif tag_description.start_with?('http://')
+          # Do nothing
+          # log.debug("Skip keyword: #{kword} (a URI)")
+        else
+       
+          tag_created_at = Time.now # note: this is the Rails created_at, not a Tweet attribute
+          tag_updated_at = tag_created_at # note: this is the Rails updated_at, not a Tweet attribute
+          
+          # Construct the query string for the tag object
+          querystring = "
+    INSERT INTO tags (tweet_id, tweet_guid, tag_name, created_at, updated_at)
+    VALUES('#{tweet_id}', '#{tweet_guid}', '#{tag_description}', '#{tag_created_at}', '#{tag_updated_at}')";
+          log.debug("Run database query:"+querystring) 
+        
+          # Execute the write for the tweet message
+          db.query(querystring)
+        end  
+      end
+      
       # move the raw tweet over to the parsed table
       parse_status = "Success"
       ParseRawTweet(db,log,row,parse_status)

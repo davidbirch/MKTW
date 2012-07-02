@@ -1,6 +1,8 @@
-<h3 class="menu">Parsed Raw Tweets</h3>
-<p>Record Count: <%= @parsed_tweets.count %></p>
-<p>Breakdown by parse status</p>
+<h3>Parsed Raw Tweets</h3>
+<% @parsed_raw_tweet_count.each do |count_row| %>
+  <p> Record Count: <%= count_row["prt_count"] %></p>
+<% end %>
+<h4>Breakdown by parse status</h4>
 <div class="row">
   <div class="span4">
     <table class="table table-striped table-bordered table-condensed">
@@ -19,7 +21,9 @@
       <% end %>
         <tr class="total">
           <td>Total</td>
-          <td><%= @parsed_tweets.count %></td>
+          <% @parsed_raw_tweet_count.each do |count_row| %>
+          <td><%= count_row["prt_count"] %></td>
+          <% end %>
         </tr>
       </tbody>
     </table>

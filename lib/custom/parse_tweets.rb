@@ -67,7 +67,7 @@ begin
     end
     
     #only run once for debugging
-    temp = false
+    #temp = false
     
   end
   
