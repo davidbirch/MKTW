@@ -44,6 +44,10 @@ gem 'jquery-rails'
 # to support Annotation
 gem 'annotate', '~> 2.4.1.beta'
 
+# to support will_paginate
+gem 'will_paginate', '~> 3.0.0'
+gem 'bootstrap-will_paginate'
+
 # to support Friendly URLs
 gem 'friendly_id', '~> 4.0.1'
 

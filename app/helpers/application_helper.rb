@@ -13,5 +13,4 @@ module ApplicationHelper
       "#{@page_loaded}"
   end
   
-  
 end

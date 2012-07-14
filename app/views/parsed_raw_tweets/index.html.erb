@@ -1,0 +1,28 @@
+<h2>Parsed Raw Tweets</h2>
+<p>List of parsed raw tweets</p>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>GUID</th>
+      <th>Parse Status</th>
+      <th>Created At</th>
+      <th>Updated At</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @parsed_raw_tweets.each do |parsed_raw_tweet| %>
+    <tr>
+      <td><%= link_to parsed_raw_tweet.id, parsed_raw_tweet_path(parsed_raw_tweet) %></td>
+      <td><%= parsed_raw_tweet.tweet_guid %></td>
+      <td><%= parsed_raw_tweet.parse_status %></td>
+      <td><%= parsed_raw_tweet.created_at %></td>
+      <td><%= parsed_raw_tweet.updated_at %></td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+<%= will_paginate @parsed_raw_tweets %>
+
+<p>---</p>
+<p><%= debug params %></p>

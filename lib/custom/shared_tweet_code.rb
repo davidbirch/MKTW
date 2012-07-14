@@ -70,7 +70,7 @@ def CreateNormalisedRecords(db,log,row)
     WHERE tweet_guid = '#{tweet_guid}'"
     
     # execute the database query
-    log.debug("Run database query: #{querystring}")
+    #log.debug("Run database query: #{querystring}")
     tweet_check = db.query(querystring)
     
     if tweet_check.count > 0
@@ -114,12 +114,12 @@ def CreateNormalisedRecords(db,log,row)
     WHERE user_guid = '#{user_guid}'"
     
       # execute the database query
-      log.debug("Run database query: #{querystring}")
+      #log.debug("Run database query: #{querystring}")
       user_check = db.query(querystring)
       
       if user_check.count > 1
         # multiple matching user records - error
-        log.debug("Error - multiple(#{user_check.count}) user records for user_guid #{user_guid}")
+        #log.debug("Error - multiple(#{user_check.count}) user records for user_guid #{user_guid}")
         # still create with id of zero so that the data is captured
         user_id = 0
       
@@ -145,7 +145,7 @@ def CreateNormalisedRecords(db,log,row)
     VALUES('#{user_guid}', '#{screen_name}', '#{friends_count}',  '#{user_created_at}', '#{user_updated_at}')"
   
         # execute the database query to create the user
-        log.debug("Run database query: #{querystring}")
+        #log.debug("Run database query: #{querystring}")
         db.query(querystring)
         
         #assign the user_id
@@ -158,7 +158,7 @@ def CreateNormalisedRecords(db,log,row)
     VALUES('#{tweet_text}', '#{tweet_original_created_at}', '#{tweet_guid}', '#{tweet_source}', '#{user_guid}', '#{user_id}', '#{sentiment}', '#{tweet_created_at}', '#{tweet_updated_at}')"
       
       # execute the database query to create the tweet
-      log.debug("Run database query: #{querystring}")
+      #log.debug("Run database query: #{querystring}")
       db.query(querystring)
       
       # create the keywords
@@ -172,12 +172,12 @@ def CreateNormalisedRecords(db,log,row)
         # Check that this is a valid keyword to create
         # Rule 1 - ignore if the length of the string is less than 4 characters
         if tag_description.length < 4
-          # Do nothing
-          # log.debug("Skip keyword: #{kword} (too short)")
+          #Do nothing
+          #log.debug("Skip keyword: #{kword} (too short)")
         # Rule 2 - ignore URIs
         elsif tag_description.start_with?('http://')
-          # Do nothing
-          # log.debug("Skip keyword: #{kword} (a URI)")
+          #Do nothing
+          #log.debug("Skip keyword: #{kword} (a URI)")
         else
        
           tag_created_at = Time.now # note: this is the Rails created_at, not a Tweet attribute
@@ -187,7 +187,7 @@ def CreateNormalisedRecords(db,log,row)
           querystring = "
     INSERT INTO tags (tweet_id, tweet_guid, tag_name, created_at, updated_at)
     VALUES('#{tweet_id}', '#{tweet_guid}', '#{tag_description}', '#{tag_created_at}', '#{tag_updated_at}')";
-          log.debug("Run database query:"+querystring) 
+          #log.debug("Run database query:"+querystring) 
         
           # Execute the write for the tweet message
           db.query(querystring)
@@ -227,7 +227,7 @@ def ParseRawTweet(db,log,row,parse_status)
     SELECT tweet_guid
     FROM parsed_raw_tweets
     WHERE tweet_guid = '#{row["tweet_guid"]}'"
-    log.debug("Run database query: #{querystring}")
+    #log.debug("Run database query: #{querystring}")
     
     # execute the write for the tweet message
     results = db.query(querystring)
@@ -235,14 +235,14 @@ def ParseRawTweet(db,log,row,parse_status)
     if results.count > 0
       # the record must already exist
       # raise an error message and delete the record in new_raw_tweets
-      log.debug("Duplicate entry found (count = #{results.count}) with guid = #{row["tweet_guid"]}")
+      #log.debug("Duplicate entry found (count = #{results.count}) with guid = #{row["tweet_guid"]}")
       
       querystring = "
     DELETE FROM new_raw_tweets
     WHERE tweet_guid = '#{row["tweet_guid"]}'"
       
       # execute the  query
-      log.debug("Run database query: #{querystring}")
+      #log.debug("Run database query: #{querystring}")
       db.query(querystring)
         
     else
@@ -257,7 +257,7 @@ def ParseRawTweet(db,log,row,parse_status)
     VALUES('#{raw_tweet}', '#{tweet_guid}', '#{parse_status}', '#{tweet_created_at}', '#{tweet_updated_at}')"
     
       # execute the query
-      log.debug("Run database query: #{querystring}")
+      #log.debug("Run database query: #{querystring}")
       db.query(querystring)
   
       querystring = "
@@ -265,7 +265,7 @@ def ParseRawTweet(db,log,row,parse_status)
     WHERE tweet_guid = '#{row["tweet_guid"]}'"
       
       # execute the  query
-      log.debug("Run database query: #{querystring}")
+      #log.debug("Run database query: #{querystring}")
       db.query(querystring)
   
     end
@@ -288,7 +288,7 @@ def GetSentimentValue(log,message)
   # Get the sentiments on each tweet using the awesome tweetsentiments API
   # http://data.tweetsentiments.com:8080/api/search.json?topic=<topic to analyze>
   sentiment_url = "http://data.tweetsentiments.com:8080/api/analyze.json?q="+message
-  log.debug("Execute sentiment query:
+  #log.debug("Execute sentiment query:
   #{sentiment_url}")
   
   sentiment_url_encoded = URI::encode(sentiment_url)

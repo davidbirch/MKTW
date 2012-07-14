@@ -3,24 +3,17 @@ class PagesController < ApplicationController
   def home
     @title = "Positive Sentiment"
     @keywords = ""
-  
-    
-  end  
-
-  def dashboard
-    @title = "Positive Sentiment | Dashboard"
-    @keywords = ""
     @page_loaded = "The page was loaded at: #{Time.now}"
     
-    # new_raw_tweets count  
-    querystring = "
-    SELECT count(id) AS nrt_count from new_raw_tweets"
-    @new_raw_tweet_count = Tweet.find_by_sql(querystring)
-    
-    # parsed_raw_tweets count
-    querystring = "
-    SELECT count(id) AS prt_count from parsed_raw_tweets"
-    @parsed_raw_tweet_count = Tweet.find_by_sql(querystring)
+    # standard record counts
+    @tweet_count = Tweet.count
+    @user_count = User.count
+    @company_count = Company.count
+    @tag_count = Tag.count
+    @parsed_raw_tweet_count = ParsedRawTweet.count
+    @new_raw_tweet_count = NewRawTweet.count
+    @company_keyword_count = CompanyKeyword.count
+    @company_price_count = CompanyPrice.count
     
     # parsed_raw_tweets by parse success/failure
     querystring = "
@@ -29,25 +22,32 @@ class PagesController < ApplicationController
     GROUP BY parse_status"
     @parse_status_count = Tweet.find_by_sql(querystring)
     
-    # companies
+    # tweets by sentiment Positive/Neutral/Negative/NA
     querystring = "
-    SELECT count(id) AS company_count from companies"
-    @company_count = Tweet.find_by_sql(querystring)
+    SELECT sentiment, count(id) AS sentiment_count
+    FROM tweets
+    GROUP BY sentiment"
+    @tweet_sentiment_count = Tweet.find_by_sql(querystring)
     
-    # company_keywords
+    # tweets by day
     querystring = "
-    SELECT count(id) AS company_keyword_count from company_keywords"
-    @company_keyword_count = Tweet.find_by_sql(querystring)
+    SELECT DATE(tweet_created_at) AS tweet_by_day, count(id) AS tweet_daily_count
+    FROM tweets
+    GROUP BY tweet_by_day"
+    @tweet_daily_count = Tweet.find_by_sql(querystring)
+      
     
-    # users
-    querystring = "
-    SELECT count(id) AS user_count from users"
-    @user_count = Tweet.find_by_sql(querystring)
     
-    # tags
-    querystring = "
-    SELECT count(id) AS tag_count from tags"
-    @tag_count = Tweet.find_by_sql(querystring)
+  end  
+
+  def dashboard
+    @title = "Positive Sentiment | Dashboard"
+    @keywords = ""
+    @page_loaded = "The page was loaded at: #{Time.now}"
+    
+    
+   
+    
     
     # top 50 tags
     querystring = "
@@ -78,20 +78,8 @@ class PagesController < ApplicationController
     SELECT count(id) AS tweet_count from tweets"
     @tweet_count = Tweet.find_by_sql(querystring)
     
-    # tweets by sentiment Positive/Neutral/Negative/NA
-    querystring = "
-    SELECT sentiment, count(id) AS sentiment_count
-    FROM tweets
-    GROUP BY sentiment"
-    @tweet_sentiment_count = Tweet.find_by_sql(querystring)
     
-    # tweets by day and hour
-    querystring = "
-    SELECT DATE(tweet_created_at) AS tweet_by_day, HOUR(tweet_created_at) AS tweet_by_hour, count(id) AS tweet_daily_count
-    FROM tweets
-    GROUP BY tweet_by_day, tweet_by_hour"
-    @tweet_daily_count = Tweet.find_by_sql(querystring)
-      
+    
   end
     
 end

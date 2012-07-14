@@ -18,7 +18,7 @@ MKTW::Application.routes.draw do
   #resources :company_prices
   #resources :company_keywords
   #resources :new_raw_tweets
-  #resources :parsed_raw_tweets
+  resources :parsed_raw_tweets, :only => [:index, :show]
   
   # ---------------------------------------------------
   

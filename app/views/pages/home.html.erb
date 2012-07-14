@@ -1,4 +1,114 @@
-<h2>test home</h2>
-<p>hello</p>
+<h2 class="menu">Dashboard</h2>
+<p><%= page_loaded %></p>
 
+<h3>Raw Tweets</h3>
+<p>Total New Raw Tweets: <%= @new_raw_tweet_count %></p>
+<p>Total Parsed Raw Tweets: <%= @parsed_raw_tweet_count %></p>
 
+<h4>Breakdown by parse status</h4>
+<div class="row">
+  <div class="span4">
+    <table class="table table-striped table-bordered table-condensed">
+      <thead>
+        <tr>
+          <th>Status</th>
+          <th>Count</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+      <% @parse_status_count.each do |count_row| %>
+        <tr>
+          <td><%= count_row.parse_status %></td>
+          <td><%= count_row.parse_status_count %></td>
+          <td><%= link_to "Show", parsed_raw_tweets_path(:parse_status => count_row.parse_status)  %></td>
+        </tr>
+      <% end %>
+        <tr class="total">
+          <td>Total</td>
+          <td><%= @parsed_raw_tweet_count %></td>
+          <td><%= link_to "Show", parsed_raw_tweets_path %></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="span8">
+  </div>
+</div>
+
+<h3>Tweets</h3>
+<p>Total: <%= @tweet_count %></p>
+
+<h4>Breakdown by sentiment</h4>
+<div class="row">
+  <div class="span4">
+    <table class="table table-striped table-bordered table-condensed">
+      <thead>
+        <tr>
+          <th>Sentiment</th>
+          <th>Count</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+      <% @tweet_sentiment_count.each do |count_row| %>
+        <tr>
+          <td><%= count_row.sentiment %></td>
+          <td><%= count_row.sentiment_count %></td>
+          <td><%= link_to "Show", tweets_path(:sentiment => count_row.sentiment)  %></td>
+        </tr>
+      <% end %>
+        <tr class="total">
+          <td>Total</td>
+          <td><%= @tweet_count %></td>
+          <td><%= link_to "Show", parsed_raw_tweets_path %></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="span8">
+  </div>
+</div>
+
+<h4>Breakdown by day</h4>
+<div class="row">
+  <div class="span4">
+    <table class="table table-striped table-bordered table-condensed">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Count</th>
+        </tr>
+      </thead>
+      <tbody>
+      <% @tweet_daily_count.each do |count_row| %>
+        <tr>
+          <td><%= count_row.tweet_by_day %></td>
+          <td><%= count_row.tweet_daily_count %></td>
+        </tr>
+      <% end %>
+        <tr class="total">
+          <td>Total</td>
+          <td><%= @tweet_count %></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="span8">
+  </div>
+</div>
+
+<h3>Users</h3>
+<p>Total: <%= @user_count %></p>
+
+<h3>Tags</h3>
+<p>Total: <%= @tag_count %></p>
+
+<h3>Companies</h3>
+<p>Total: <%= @company_count %></p>
+
+<h3>Company Keywords</h3>
+<p>Total: <%= @company_keyword_count %></p>
+
+<h3>Company Prices</h3>
+<p>Total: <%= @company_price_count %></p>

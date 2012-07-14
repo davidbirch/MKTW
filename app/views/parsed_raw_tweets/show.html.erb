@@ -1,0 +1,16 @@
+<h3>Parsed Raw Tweet: <%= @parsed_raw_tweet.id %></h3>
+<dl class="dl-horizontal">
+  <dt>Tweet GUID</dt>
+  <dd><%= @parsed_raw_tweet.tweet_guid %></dd>
+  <dt>Parse Status</dt>
+  <dd><%= @parsed_raw_tweet.parse_status %></dd>
+  <dt>Created At</dt>
+  <dd><%= @parsed_raw_tweet.created_at %></dd>
+  <dt>Updated At</dt>
+  <dd><%= @parsed_raw_tweet.updated_at %></dd>
+  <dt>Raw</st>
+  <dd><%= @parsed_raw_tweet.raw %></dd>
+</dl>
+
+<p>---</p>
+<p><%= debug params %></p>
