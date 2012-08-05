@@ -70,7 +70,7 @@ begin
     VALUES('#{raw_tweet}', '#{tweet_guid}', '#{tweet_created_at}', '#{tweet_updated_at}')"
       
       # execute the query
-      # log.debug("Run database query: #{querystring}")
+      log.debug("Run database query: #{querystring}")
       db.query(querystring)
   
       querystring = "

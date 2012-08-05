@@ -7,7 +7,15 @@ class ParsedRawTweetsController < ApplicationController
     @keywords = ""
     
     @parsed_raw_tweets = ParsedRawTweet.paginate(:per_page => 20, :page => params[:page])
-        
+    
+    if params[:parse_status]
+      @parsed_raw_tweets = @parsed_raw_tweets.where(:parse_status => params[:parse_status])
+    end
+   
+    if params[:tweet_guid]
+      @parsed_raw_tweets = @parsed_raw_tweets.where(:tweet_guid => params[:tweet_guid])
+    end 
+    
     respond_to do |format|
       format.html # index.html.erb
       format.json { render json: @parsed_raw_tweets }

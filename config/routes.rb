@@ -14,7 +14,7 @@ MKTW::Application.routes.draw do
   resources :users, :only => [:index]
   #resources :tags
   #resources :groups
-  #resources :companies
+  resources :companies, :only => [:index, :show]
   #resources :company_prices
   #resources :company_keywords
   #resources :new_raw_tweets

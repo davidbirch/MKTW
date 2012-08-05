@@ -36,6 +36,12 @@ class PagesController < ApplicationController
     GROUP BY tweet_by_day"
     @tweet_daily_count = Tweet.find_by_sql(querystring)
       
+    # list of companies
+    querystring = "
+    SELECT id, company_name
+    FROM companies"
+    @company_names = Company.find_by_sql(querystring)
+      
     
     
   end  

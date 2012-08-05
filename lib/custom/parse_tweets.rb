@@ -10,7 +10,7 @@ require 'json'
 require 'logger'
 require 'time'
 require 'yaml'
-require 'net/http'
+require "net/http"
 #require 'tweetstream'
 
 # required shared code
@@ -48,7 +48,7 @@ begin
   FROM new_raw_tweets"
   log.debug("Run database query: #{querystring}")
   
-  # use temp here so that it can be called manually
+  # use i here so that it can be called manually
   # in future investigate running a continuous while loop ....
   temp = true
   while temp
@@ -57,6 +57,8 @@ begin
     results = db.query(querystring)
     #log.debug("Number of rows in new_raw_tweets: #{results.count}")
     
+    #loop for 3000
+    i = 0
     results.each do |row|
   
       # create the normalised records
@@ -64,10 +66,14 @@ begin
       # then move it to the parsed table - status 'success'
       CreateNormalisedRecords(db,log,row)
       
+      i+=1
+      print "#{i}
+      "
+      break if i==5000
     end
     
-    #only run once for debugging
-    #temp = false
+    # increment
+    temp = false
     
   end
   

@@ -1,0 +1,192 @@
+<script>
+    
+    google.load("visualization", "1", {packages:["corechart"]});
+    
+    google.setOnLoadCallback(drawChart);
+
+      
+    function drawChart() {
+      
+      // Create and populate the data table.
+      var data1 = new google.visualization.DataTable();
+      data1.addColumn('date', 'Date');
+      data1.addColumn('number', 'All');
+      data1.addColumn('number', 'Pos');
+      data1.addColumn('number', 'Neg');
+      data1.addRows([
+        [new Date(2012,6,20), 29   ,  19  , 10  ],
+        [new Date(2012,6,21), 744  , 344  , 400 ],
+        [new Date(2012,6,23), 675  , 250  , 425 ],
+        [new Date(2012,6,24), 626  , 326  , 300 ],
+      ]);
+    
+      // Options
+      var options1 = {
+              title: "All Tweets By Day",
+              series: [{color: '#458B00'},{color: '#779ECB'},{color: '#C23B22'}],
+              curveType: "function",
+              legend: {position: 'bottom'}
+      };
+      
+      // Create the other temporary visualisations
+      new google.visualization.LineChart(document.getElementById('chart_monthly_2')).
+          draw(data1, options1);
+      new google.visualization.LineChart(document.getElementById('chart_monthly_3')).
+          draw(data1, options1);
+      
+      new google.visualization.LineChart(document.getElementById('chart_weekly_2')).
+          draw(data1, options1);
+      new google.visualization.LineChart(document.getElementById('chart_weekly_3')).
+          draw(data1, options1);
+      
+      new google.visualization.LineChart(document.getElementById('chart_daily_2')).
+          draw(data1, options1);
+      new google.visualization.LineChart(document.getElementById('chart_daily_3')).
+          draw(data1, options1);
+      
+      // data2 = Tweets By Day
+      var data2 = new google.visualization.DataTable();
+      data2.addColumn('date', 'Date');
+      data2.addColumn('number', 'Total');
+      data2.addColumn('number', 'Pos');
+      data2.addColumn('number', 'Neg');
+      data2.addRows([
+      <% @tweets_by_day.each do |t| %>
+        [new Date(<%=t.tweet_datetime_formatted%>), <%=t.tweet_day_count%>, <%=t.tweet_day_positive_count%>, <%=t.tweet_day_negative_count%>],
+      <% end %>
+      ]);
+    
+      // Options
+      var options2 = {
+              title: "All Tweets By Day",
+              series: [{color: '#458B00'},{color: '#779ECB'},{color: '#C23B22'}],
+              curveType: "function",
+              legend: {position: 'bottom'}
+      };
+      
+      // Create and draw the visualisation.
+      new google.visualization.LineChart(document.getElementById('chart_monthly_1')).
+          draw(data2, options2);
+      
+      
+      // data3 = Tweets By Hour For A Day
+      var data3 = new google.visualization.DataTable();
+      data3.addColumn('date', 'Hour');
+      data3.addColumn('number', 'Total');
+      data3.addColumn('number', 'Pos');
+      data3.addColumn('number', 'Neg');
+      data3.addRows([
+      <% @tweets_by_hour_for_one_day.each do |t| %>
+        [new Date(<%=t.tweet_datetime_formatted%>), <%=t.tweet_day_count%>, <%=t.tweet_day_positive_count%>, <%=t.tweet_day_negative_count%>],
+      <% end %>
+      ]);
+    
+      // Options
+      var options3 = {
+              title: "Today's Tweets By Hour",
+              series: [{color: '#458B00'},{color: '#779ECB'},{color: '#C23B22'}],
+              curveType: "function",
+              legend: {position: 'bottom'}
+      };
+      
+      // Create and draw the visualisation.
+      new google.visualization.LineChart(document.getElementById('chart_daily_1')).
+          draw(data3, options3);
+      
+          
+      // data4 = Tweets By Hour For A Week
+      var data4 = new google.visualization.DataTable();
+      data4.addColumn('date', 'Date/Time');
+      data4.addColumn('number', 'Total');
+      data4.addColumn('number', 'Pos');
+      data4.addColumn('number', 'Neg');
+      data4.addRows([
+      <% @tweets_by_hour_for_one_week.each do |t| %>
+        [new Date(<%=t.tweet_datetime_formatted%>), <%=t.tweet_day_count%>, <%=t.tweet_day_positive_count%>, <%=t.tweet_day_negative_count%>],
+      <% end %>
+      ]);
+    
+      // Options
+      var options4 = {
+              title: "This Week's Tweets By Hour",
+              series: [{color: '#458B00'},{color: '#779ECB'},{color: '#C23B22'}],
+              curveType: "function",
+              legend: {position: 'bottom'}
+      };
+      
+      // Create and draw the visualisation.
+      new google.visualization.LineChart(document.getElementById('chart_weekly_1')).
+          draw(data4, options4);
+      
+    }
+</script>
+
+<div class="row">
+  <div class="span12">
+    <h3><%= @company.company_name %> (ASX: <%= @company.asx_code %>)</h3>
+    <dl class="dl-horizontal">
+      <dt>Description</dt>
+      <dd><%= @company.company_description %></dd>
+    </dl>
+  <div>
+</div>
+  <div class="row chart-row">
+  <div class="span12">
+    <h4>Daily Sentiment</h4>
+  </div>
+  <div class="row">
+    <div class="span4">
+      <div id="chart_daily_1"></div>
+    </div>
+    <div class="span4">
+      <div id="chart_daily_2"></div>
+    </div>
+    <div class="span4">
+      <div id="chart_daily_3"></div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="span4">
+      <p>Drill down</p>
+    </div>
+    <div class="span4">
+      <p>Drill down</p>
+    </div>
+    <div class="span4">
+      <p>Drill down</p>
+    </div>
+  </div>
+</div>
+  <div class="row chart-row">
+  <div class="span12">
+    <h4>Weekly Sentiment</h4>
+  </div>
+  <div class="row">
+    <div class="span4">
+      <div id="chart_weekly_1"></div>
+    </div>
+    <div class="span4">
+      <div id="chart_weekly_2"></div>
+    </div>
+    <div class="span4">
+      <div id="chart_weekly_3"></div>
+    </div>
+  </div>
+</div>  
+<div class="row chart-row">
+  <div class="span12">
+    <h4>Monthly Sentiment</h4>
+  </div>
+  <div class="row">
+    <div class="span4">
+      <div id="chart_monthly_1"></div>
+    </div>
+    <div class="span4">
+      <div id="chart_monthly_2"></div>
+    </div>
+    <div class="span4">
+      <div id="chart_monthly_3"></div>
+    </div>
+  </div>
+</div>
+

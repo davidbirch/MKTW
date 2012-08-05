@@ -31,3 +31,9 @@ dt, dd{
 .brand:hover{
     background-color: transparent;  
 }
+
+.chart-row{
+    box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.2);
+    border-radius: 7px;
+    margin-bottom: 20px;
+}

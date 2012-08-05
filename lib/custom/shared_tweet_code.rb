@@ -25,7 +25,7 @@ def CreateRawTweet(db,log,status)
     VALUES('#{raw_tweet}', '#{tweet_guid}', '#{tweet_created_at}', '#{tweet_updated_at}')"
       
     # execute the database query
-    #log.debug("Run database query: #{querystring}")
+    log.debug("Run database query: #{querystring}")
     db.query(querystring)
     
     # monitor the status of the script and write to the log every 10 minutes
@@ -70,7 +70,7 @@ def CreateNormalisedRecords(db,log,row)
     WHERE tweet_guid = '#{tweet_guid}'"
     
     # execute the database query
-    #log.debug("Run database query: #{querystring}")
+    log.debug("Run database query: #{querystring}")
     tweet_check = db.query(querystring)
     
     if tweet_check.count > 0
@@ -100,7 +100,7 @@ def CreateNormalisedRecords(db,log,row)
       
       # get the sentiment value
       sentiment_result = GetSentimentValue(log,tweet_text)
-      sentiment = sentiment_result["sentiment"]["name"]
+      sentiment = sentiment_result["mood"]
         
       tweet_created_at = Time.now # note: this is the Rails created_at, not a Tweet attribute
       tweet_updated_at = tweet_created_at # note: this is the Rails updated_at, not a Tweet attribute
@@ -145,7 +145,7 @@ def CreateNormalisedRecords(db,log,row)
     VALUES('#{user_guid}', '#{screen_name}', '#{friends_count}',  '#{user_created_at}', '#{user_updated_at}')"
   
         # execute the database query to create the user
-        #log.debug("Run database query: #{querystring}")
+        log.debug("Run database query: #{querystring}")
         db.query(querystring)
         
         #assign the user_id
@@ -158,7 +158,7 @@ def CreateNormalisedRecords(db,log,row)
     VALUES('#{tweet_text}', '#{tweet_original_created_at}', '#{tweet_guid}', '#{tweet_source}', '#{user_guid}', '#{user_id}', '#{sentiment}', '#{tweet_created_at}', '#{tweet_updated_at}')"
       
       # execute the database query to create the tweet
-      #log.debug("Run database query: #{querystring}")
+      log.debug("Run database query: #{querystring}")
       db.query(querystring)
       
       # create the keywords
@@ -187,7 +187,7 @@ def CreateNormalisedRecords(db,log,row)
           querystring = "
     INSERT INTO tags (tweet_id, tweet_guid, tag_name, created_at, updated_at)
     VALUES('#{tweet_id}', '#{tweet_guid}', '#{tag_description}', '#{tag_created_at}', '#{tag_updated_at}')";
-          #log.debug("Run database query:"+querystring) 
+          log.debug("Run database query:"+querystring) 
         
           # Execute the write for the tweet message
           db.query(querystring)
@@ -227,7 +227,7 @@ def ParseRawTweet(db,log,row,parse_status)
     SELECT tweet_guid
     FROM parsed_raw_tweets
     WHERE tweet_guid = '#{row["tweet_guid"]}'"
-    #log.debug("Run database query: #{querystring}")
+    log.debug("Run database query: #{querystring}")
     
     # execute the write for the tweet message
     results = db.query(querystring)
@@ -235,14 +235,14 @@ def ParseRawTweet(db,log,row,parse_status)
     if results.count > 0
       # the record must already exist
       # raise an error message and delete the record in new_raw_tweets
-      #log.debug("Duplicate entry found (count = #{results.count}) with guid = #{row["tweet_guid"]}")
+      log.debug("Duplicate entry found (count = #{results.count}) with guid = #{row["tweet_guid"]}")
       
       querystring = "
     DELETE FROM new_raw_tweets
     WHERE tweet_guid = '#{row["tweet_guid"]}'"
       
       # execute the  query
-      #log.debug("Run database query: #{querystring}")
+      log.debug("Run database query: #{querystring}")
       db.query(querystring)
         
     else
@@ -257,7 +257,7 @@ def ParseRawTweet(db,log,row,parse_status)
     VALUES('#{raw_tweet}', '#{tweet_guid}', '#{parse_status}', '#{tweet_created_at}', '#{tweet_updated_at}')"
     
       # execute the query
-      #log.debug("Run database query: #{querystring}")
+      log.debug("Run database query: #{querystring}")
       db.query(querystring)
   
       querystring = "
@@ -265,7 +265,7 @@ def ParseRawTweet(db,log,row,parse_status)
     WHERE tweet_guid = '#{row["tweet_guid"]}'"
       
       # execute the  query
-      #log.debug("Run database query: #{querystring}")
+      log.debug("Run database query: #{querystring}")
       db.query(querystring)
   
     end
@@ -285,19 +285,39 @@ end
 
 def GetSentimentValue(log,message)
   
-  # Get the sentiments on each tweet using the awesome tweetsentiments API
+  # --- tweetsentiments is now a paid service ---
+  # Get the sentiments on each tweet using the tweetsentiment API
   # http://data.tweetsentiments.com:8080/api/search.json?topic=<topic to analyze>
-  sentiment_url = "http://data.tweetsentiments.com:8080/api/analyze.json?q="+message
-  #log.debug("Execute sentiment query:
+  #sentiment_url = "http://data.tweetsentiments.com:8080/api/analyze.json?q="+messa
+    
+  # access the api key
+  vh_yaml = YAML.load_file(File.expand_path("../../../config/viralheat.yml", __FILE__))
+  vh_config = vh_yaml[RAILS_ENVIRONMENT]
+  
+  # Get the sentiments on each tweet using the viralheat API
+  # https://www.viralheat.com/api/sentiment/review.json?text=i%20dont%20like%20this&api_key=<your api key>  
+  sentiment_url = "https://www.viralheat.com/api/sentiment/review.json?text="+message+"&api_key="+vh_config["api_key"]
+
+  log.debug("Execute sentiment query:
   #{sentiment_url}")
   
-  sentiment_url_encoded = URI::encode(sentiment_url)
-  sentiment_resp = Net::HTTP.get_response(URI.parse(sentiment_url_encoded))
-  sentiment_data = sentiment_resp.body
+  #
+  url_encoded = URI::encode(sentiment_url) 
+  uri = URI.parse(url_encoded)
+  http = Net::HTTP.new(uri.host, uri.port)
+  http.use_ssl = true
+  http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+  
+  request = Net::HTTP::Get.new(uri.request_uri)
+
+  response = http.request(request)
+  sentiment_data = response.body
   sentiment_result = JSON.parse(sentiment_data)
    
-    # every time this is called wait 5 sec to avoind the rate limit
-    sleep 2 
+  # every time this is called wait to avoid the rate limit
+  # sleep 2 
+  log.debug("Result:
+  #{sentiment_result}")
     
   return sentiment_result
 end

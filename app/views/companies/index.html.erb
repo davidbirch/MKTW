@@ -1,0 +1,22 @@
+<h2>Companies</h2>
+<p>List of companies</p>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Name</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @companies.each do |company| %>
+    <tr>
+      <td><%= link_to company.id, company_path(company) %></td>
+      <td><%= company.company_name %></td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+<%= will_paginate @companies %>
+
+<p>---</p>
+<p><%= debug params %></p>
