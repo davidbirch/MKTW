@@ -9,7 +9,7 @@
       
       // Create and populate the data table.
       var data1 = new google.visualization.DataTable();
-      data1.addColumn('date', 'Date');
+      data1.addColumn('datetime', 'Date');
       data1.addColumn('number', 'All');
       data1.addColumn('number', 'Pos');
       data1.addColumn('number', 'Neg');
@@ -25,28 +25,13 @@
               title: "All Tweets By Day",
               series: [{color: '#458B00'},{color: '#779ECB'},{color: '#C23B22'}],
               curveType: "function",
-              legend: {position: 'bottom'}
+              legend: {position: 'bottom'},
+              hAxis: {format: 'd-MMM'}
       };
-      
-      // Create the other temporary visualisations
-      new google.visualization.LineChart(document.getElementById('chart_monthly_2')).
-          draw(data1, options1);
-      new google.visualization.LineChart(document.getElementById('chart_monthly_3')).
-          draw(data1, options1);
-      
-      new google.visualization.LineChart(document.getElementById('chart_weekly_2')).
-          draw(data1, options1);
-      new google.visualization.LineChart(document.getElementById('chart_weekly_3')).
-          draw(data1, options1);
-      
-      new google.visualization.LineChart(document.getElementById('chart_daily_2')).
-          draw(data1, options1);
-      new google.visualization.LineChart(document.getElementById('chart_daily_3')).
-          draw(data1, options1);
       
       // data2 = Tweets By Day
       var data2 = new google.visualization.DataTable();
-      data2.addColumn('date', 'Date');
+      data2.addColumn('datetime', 'Date');
       data2.addColumn('number', 'Total');
       data2.addColumn('number', 'Pos');
       data2.addColumn('number', 'Neg');
@@ -61,7 +46,8 @@
               title: "All Tweets By Day",
               series: [{color: '#458B00'},{color: '#779ECB'},{color: '#C23B22'}],
               curveType: "function",
-              legend: {position: 'bottom'}
+              legend: {position: 'bottom'},
+              hAxis: {format: 'd-MMM'}
       };
       
       // Create and draw the visualisation.
@@ -71,7 +57,7 @@
       
       // data3 = Tweets By Hour For A Day
       var data3 = new google.visualization.DataTable();
-      data3.addColumn('date', 'Hour');
+      data3.addColumn('datetime', 'Hour');
       data3.addColumn('number', 'Total');
       data3.addColumn('number', 'Pos');
       data3.addColumn('number', 'Neg');
@@ -86,7 +72,8 @@
               title: "Today's Tweets By Hour",
               series: [{color: '#458B00'},{color: '#779ECB'},{color: '#C23B22'}],
               curveType: "function",
-              legend: {position: 'bottom'}
+              legend: {position: 'bottom'},
+              hAxis: {format: 'ha'}
       };
       
       // Create and draw the visualisation.
@@ -111,7 +98,8 @@
               title: "This Week's Tweets By Hour",
               series: [{color: '#458B00'},{color: '#779ECB'},{color: '#C23B22'}],
               curveType: "function",
-              legend: {position: 'bottom'}
+              legend: {position: 'bottom'},
+              hAxis: {format: 'd-MMM'}
       };
       
       // Create and draw the visualisation.
@@ -135,25 +123,17 @@
     <h4>Daily Sentiment</h4>
   </div>
   <div class="row">
-    <div class="span4">
+    <div class="span8">
       <div id="chart_daily_1"></div>
     </div>
     <div class="span4">
-      <div id="chart_daily_2"></div>
-    </div>
-    <div class="span4">
-      <div id="chart_daily_3"></div>
     </div>
   </div>
   <div class="row">
-    <div class="span4">
+    <div class="span8">
       <p>Drill down</p>
     </div>
     <div class="span4">
-      <p>Drill down</p>
-    </div>
-    <div class="span4">
-      <p>Drill down</p>
     </div>
   </div>
 </div>
@@ -162,14 +142,10 @@
     <h4>Weekly Sentiment</h4>
   </div>
   <div class="row">
-    <div class="span4">
+    <div class="span8">
       <div id="chart_weekly_1"></div>
     </div>
     <div class="span4">
-      <div id="chart_weekly_2"></div>
-    </div>
-    <div class="span4">
-      <div id="chart_weekly_3"></div>
     </div>
   </div>
 </div>  
@@ -178,14 +154,10 @@
     <h4>Monthly Sentiment</h4>
   </div>
   <div class="row">
-    <div class="span4">
+    <div class="span8">
       <div id="chart_monthly_1"></div>
     </div>
     <div class="span4">
-      <div id="chart_monthly_2"></div>
-    </div>
-    <div class="span4">
-      <div id="chart_monthly_3"></div>
     </div>
   </div>
 </div>

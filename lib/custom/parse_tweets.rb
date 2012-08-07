@@ -14,7 +14,7 @@ require "net/http"
 #require 'tweetstream'
 
 # required shared code
-require "./#{File.dirname(__FILE__)}/shared_tweet_code.rb"
+require "#{File.dirname(__FILE__)}/shared_tweet_code.rb"
 
 # initialise the log
 log = Logger.new(File.expand_path(TWEET_LOG_FILE_PATH, __FILE__))
@@ -57,7 +57,8 @@ begin
     results = db.query(querystring)
     #log.debug("Number of rows in new_raw_tweets: #{results.count}")
     
-    #loop for 3000
+    # this will run every 10 minutes
+    # loop for 100
     i = 0
     results.each do |row|
   
@@ -67,9 +68,9 @@ begin
       CreateNormalisedRecords(db,log,row)
       
       i+=1
-      print "#{i}
-      "
-      break if i==5000
+      #print "#{i}
+      #"
+      break if i==100
     end
     
     # increment
